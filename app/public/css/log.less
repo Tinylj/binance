@@ -1,0 +1,229 @@
+html,body {
+    margin: 0; 
+    padding: 0; 
+    font-size: .2rem;
+    font-family: Helvetica, sans-serif, Arial;
+    text-align: center;
+    line-height: 1;
+    overflow-x: hidden;
+    letter-spacing: 0.01rem;
+    background-color: #F5F5F5;
+    h1,h2,h3,h4,h5,h6,p {
+        padding: 0;
+        margin: 0;
+        font-weight: normal;
+    }
+    .max-width {
+        max-width: 6rem!important;
+        position: relative;
+        text-align: left;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+.podevent-head {
+    position: relative;
+    height: 4.73rem;
+    background: red linear-gradient(#f83325, #ff5c5c);
+    .head-body {
+        width: calc(~"100% - 0.6rem");
+        height: 100%;
+        z-index: 2;
+        padding: 0.6rem 0.3rem;
+        position: relative;
+    }
+    .podevent-logo {
+        display: inline-block;
+        position: absolute;
+        right: 0.2rem;
+        top: 0.2rem;
+        width: 1rem;
+    }
+	.podevent-title {
+        font-size: 0.24rem;
+        color: #ffffff;
+        font-weight: bold;
+	}
+	.podevent-name {
+        font-weight: bold;
+        padding-top: 0.26rem;
+        padding-bottom: 0.2rem;
+        color: #ffffff;
+        line-height: 0.35rem;
+        font-size: 0.3rem;
+        width: 2.3rem;
+        // word-break: break-all;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+        height: 1.05rem;
+	}
+	.podevent-info {
+		.podevent-info-item {
+            font-size: 0.14rem;
+            td {
+                margin: 0;
+                padding: 0;
+            }
+			.podevent-info-item-name {
+                width: 1.1rem;
+                vertical-align: text-top;
+                color: #ffc7c7;
+			}
+			.podevent-info-item-content {
+                vertical-align: text-top;
+                color: #ffffff;
+                width: 1.2rem;
+                line-height: 0.2rem;
+                word-break: break-all;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 3;
+                overflow: hidden;
+			}
+		}
+    }
+}
+.background-body {
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    .background-img-left {
+        width: 4rem;
+        height: 4rem;
+        position: absolute;
+        top: -3rem;
+        right: calc(~"50% - 0.5rem");
+        img {
+            width: 100%;
+        }
+    }
+    .background-img-bottom {
+        width: 5.5rem;
+        height: 3.3rem;
+        overflow-y: hidden;
+        position: absolute;
+        bottom: 0;
+        left: calc(~"50% - 1.5rem");
+        img {
+            width: 100%;
+        }
+    }
+    .background-img-footer {
+        width: 3.75rem;
+        overflow-y: hidden;
+        position: absolute;
+        bottom: 0;
+        left: calc(~"50% - 1.875rem");
+        img {
+            width: 100%;
+        }
+    }
+}
+.podevent-body {
+    padding: 0 0.1rem;
+    margin-top: -0.92rem;
+    z-index: 6;
+	.podevent-box-item {
+        padding: 0.25rem;
+        padding-left: 0.2rem;
+        margin-bottom: 0.1rem;
+        border-radius: 0.05rem;
+        background-color: #ffffff;
+		.podevent-box-time {
+            display: inline-block;
+            width: 0.58rem;
+            vertical-align: text-top;
+            color: #3d3e4c;
+			.podevent-box-day {
+                font-size: 0.24rem;
+                font-weight: bold;
+			}
+			.podevent-box-mounth {
+                font-size: 0.12rem;
+                line-height: 0.2rem;
+                color: #999;
+                letter-spacing: 0;
+			}
+		}
+		.podevent-box-content {
+            display: inline-block;
+            width: calc(~"100% - 0.66rem");
+            vertical-align: text-top;
+			.podevent-box-level {
+                .wariningLevel-icon {
+                    height: 0.2rem;
+                    vertical-align: top;
+                }
+                .wariningLevel-world {
+                    font-size: 0.18rem;
+                    font-weight: bold;
+                    &.gray {
+                        color: #CCC;
+                    }
+                    &.red {
+                        color: #f93629;
+                    }
+                    &.yellow {
+                        color: #FFA400;
+                    }
+                    &.blue {
+                        color: #0084ff;
+                    }
+                    &.green3 {
+                        color: #43a047;
+                    }
+                    &.green2 {
+                        color: #66BB6A;
+                    }
+                    &.green1 {
+                        color: #81C784;
+                    }
+                    &.green0 {
+                        color: #A5D6A7;
+                    }
+                }
+			}
+			.podevent-box-msg {
+                padding-top: 0.15rem;
+                font-size: 0.14rem;
+                line-height: 0.22rem;
+                color: #3d3e4c;
+                text-align: justify;
+                word-break: break-all;
+			}
+		}
+	}
+}
+.podevent-footer {
+    height: 2.24rem;
+    padding: 0;
+    .podevent-footer-body {
+        position: relative;
+        z-index: 2;
+    }
+	p {
+        text-align: center;
+        font-size: 0.1rem;
+        line-height: 0.15rem;
+        color: #AAAAAA;
+    }
+    .QRCode {
+        width: 1rem;
+        height: 1rem;
+        margin-bottom: 0.13rem;
+        margin-top: 0.24rem;
+        display: inline-block;
+    }
+    .QRCode-title {
+        margin-bottom: 0.33rem;
+    }
+}
+.text-center {
+    text-align: center;
+}

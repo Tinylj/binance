@@ -1,0 +1,30 @@
+{
+  "name": "lh-bond-node-service",
+  "version": "1.0.0",
+  "description": "lh-bond-node-service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "egg-bin dev",
+    "start": "egg-scripts start --port=7001 --daemon --title=lh-bond-node-service",
+    "stop": "egg-scripts stop [--title=lh-bond-node-service]"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://lujin@10.1.80.26/r/lhdna/bond/html/lh-dna-bond-html-new.git"
+  },
+  "author": "Tinylj (lujin.pt@163.com)",
+  "license": "ISC",
+  "dependencies": {
+    "egg": "^2.22.2",
+    "egg-scripts": "^2.11.0",
+    "egg-view-nunjucks": "^2.2.0",
+    "mime-types": "^2.1.24",
+    "pdf-lib": "^1.9.0",
+    "text-to-svg": "^3.1.5",
+    "svg2png": "4.1.1"
+  },
+  "devDependencies": {
+    "egg-bin": "^4.13.1"
+  }
+}
