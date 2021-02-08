@@ -1,74 +1,84 @@
 const Controller = require('egg').Controller;
-const fs = require("fs");
-const path = require("path");
+const CryptoJS = require('crypto-js');
+const QRCode = require('qrcode')
+const cheerio = require('cheerio');
 class podeventController extends Controller {
     //测试获取实际内容
     async log() {
         //获取调用该接口的参数
-        let headInfo = JSON.parse(this.ctx.request.body.param);
-        // let headInfo = {
-        //     flag: 'true',
-        //     name: '14华阳经贸MTN001',
-        //     type: 'entity', //entity or bond
-        //     issuer: '洛娃科技实业集团有限公司', //债券专用
-        //     province: '广东省', //主体专用
-        //     deadline: '2019-6-10',
-        //     defaultMoney: '1.13',
-        //     generateDate: '2019-6-10',
-        //     industry: '联合三级',
-        //     podeventList: [
-        //         {
-        //         happen_warning_level: '10',
-        //         content: '产能过剩、亏损严重/行业低迷，资金链紧张',
-        //         time: '2019.07.01'
-        //         },{
-        //         happen_warning_level: '20',
-        //         content: 'balabala',
-        //         time: '2019.07.01'
-        //         }
-        //     ]
-        // };
-        let resultData = {};
-        // 读取base64图片。图片转化base64请使用imgToBase64/output接口
-        let imgList = await fs.readFileSync(path.resolve('app/public/img/base64/allImg.txt'));
-        imgList = JSON.parse(imgList)||{};
-        if(headInfo.flag != 'false') {
-            // 数据请求成功
-            resultData = {
-                title: '联合见智: '+headInfo.name+' 违约历程'
-            };
-            resultData = {...resultData, ...headInfo};
-            for(let i=0; i<resultData.podeventList.length; i++) {
-                let item = resultData.podeventList[i];
-                if(item.time == null) {
-                    item.day = '-';
-                    item.mounth = '-';
-                } else {
-                    let date = item.time.split('.');
-                    item.day = date[2]||'-';
-                    item.mounth = (date[0]||'-')+'.'+(date[1]||'-');
-                }
-            }
-            // let imgList = await this.ctx.service.imgToBase64.init();
-            resultData.imgList = imgList;
-            await this.ctx.render('podevent/log.tpl', resultData);
-        } else {
-            // 数据有误（可能是二维码过期啥的保存，反正错误的都走这个页面）
-            // 图片转化base64
-            // let imgList = await this.ctx.service.imgToBase64.init("app/public/img/dataError.svg");
-            // imgList = imgList||{};
-            // let imgList2 = await this.ctx.service.imgToBase64.init("app/public/img/QRCode.jpg");
-            // imgList2 = imgList2||{};
-            // imgList = {...imgList, ...imgList2};
-            resultData = {
-                imgList: {
-                    dataError: imgList.dataError,
-                    QRCode: imgList.QRCode
-                }
-            };
-            await this.ctx.render('podevent/dataError.tpl', resultData);
-        }
+        const param = this.ctx.query.param;
 
+        // 这里返回的如果是一个有问题的效果该如何展示
+        const key = CryptoJS.enc.Utf8.parse("1234123412ABCDEF");  //十六位十六进制数作为密钥
+        const iv = CryptoJS.enc.Utf8.parse('ABCDEF1234123412');   //十六位十六进制数作为密钥偏移量
+        //解密方法
+        let Decrypt = (word)=> {
+            let encryptedHexStr = CryptoJS.enc.Hex.parse(word);
+            let srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr);
+            let decrypt = CryptoJS.AES.decrypt(srcs, key, { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 });
+            let decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);
+            return decryptedStr.toString();
+        };
+        let decryptWord = Decrypt(param);
+        console.log(decryptWord);
+        let strs = decryptWord.split("&");
+
+        //获取compCode
+        let compCode = strs[0].split("=")[1];
+        //获取时间
+        let sTime = strs[1].split("=")[1];
+
+        //是否过期，date1,外界时间(unix时间戳)，num过期天数
+        function ifExpire(date1,num){
+            //第一次请求的时间
+            let expireDate = new Date((date1.substr(0,10))*1000);
+            //第一次请求的过期时间
+            expireDate.setDate(expireDate.getDate() + num);
+            //当前时间
+            let cnow = new Date();
+
+            //如果当前时间大于过期时间，则过期了
+            if(cnow.getTime() > expireDate.getTime()){
+                return true;
+            } else {
+                return false;
+            }
+        }
+        //如果过期了，返回过期了。先设定个1天内失效
+        if(ifExpire(sTime,1)) {
+            this.ctx.body = "该链接已失效";
+        }
+        else {
+            const dataList = await this.ctx.service.podevent.log(compCode);
+            await this.ctx.render('podevent/log.tpl', dataList);
+        }
+    }
+    //获取二维码
+    async getQRCode() {
+        const compCode = this.ctx.query.compCode;
+        let t1 = new Date().getTime();
+        let beforeWord = `compCode=${compCode}&sTime=${t1}`;
+
+        const key = CryptoJS.enc.Utf8.parse("1234123412ABCDEF");  //十六位十六进制数作为密钥
+        const iv = CryptoJS.enc.Utf8.parse('ABCDEF1234123412');   //十六位十六进制数作为密钥偏移量
+        //加密方法
+        let Encrypt =(word)=> {
+            let srcs = CryptoJS.enc.Utf8.parse(word);
+            let encrypted = CryptoJS.AES.encrypt(srcs, key, { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 });
+            return encrypted.ciphertext.toString().toUpperCase();
+        };
+        console.log(beforeWord);
+        let encryptWord = Encrypt(beforeWord);
+        let returnUrl = `http://127.0.0.1:7001/podevent/log?param=${encryptWord}`;
+        let myurl = "";
+        //生成二维码
+        await QRCode.toDataURL(returnUrl).then(url => {
+            myurl = url;
+            console.log(url)
+        }).catch(err => {
+            console.error(err)
+        });
+        await this.ctx.render('podevent/getQRCode.tpl', {myurl:myurl,description:returnUrl});
     }
 }
 

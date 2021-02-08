@@ -1,13 +1,11 @@
 {
   "name": "lh-bond-node-service",
   "version": "1.0.0",
-  "description": "lh-bond-node-service",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "egg-bin dev",
-    "start": "egg-scripts start --port=7001 --daemon --title=lh-bond-node-service",
-    "stop": "egg-scripts stop [--title=lh-bond-node-service]"
+    "dev": "egg-bin dev"
   },
   "repository": {
     "type": "git",
@@ -16,13 +14,12 @@
   "author": "Tinylj (lujin.pt@163.com)",
   "license": "ISC",
   "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "crypto-js": "^3.1.9-1",
     "egg": "^2.22.2",
-    "egg-scripts": "^2.11.0",
+    "egg-mysql": "^3.0.0",
     "egg-view-nunjucks": "^2.2.0",
-    "mime-types": "^2.1.24",
-    "pdf-lib": "^1.9.0",
-    "text-to-svg": "^3.1.5",
-    "svg2png": "4.1.1"
+    "qrcode": "^1.3.3"
   },
   "devDependencies": {
     "egg-bin": "^4.13.1"
